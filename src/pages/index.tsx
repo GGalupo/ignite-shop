@@ -1,25 +1,30 @@
-import { styled } from "../styles";
+import Image from "next/image";
 
-const Button = styled("button", {
-  backgroundColor: "$green500",
-  borderRadius: 8,
-  border: 0,
-  padding: "0.25rem 0.5rem",
-
-  span: {
-    fontWeight: "bold",
-  },
-
-  "&:hover": {
-    filter: "brightness(0.8)",
-  },
-});
+import shirt1 from "../../public/shirts/shirt-1.png";
+import shirt2 from "../../public/shirts/shirt-2.png";
+import shirt3 from "../../public/shirts/shirt-3.png";
+import { HomeContainer, Product } from "../styles/pages/home";
 
 export default function Home() {
   return (
-    <Button>
-      <span>test text </span>
-      Submit
-    </Button>
+    <HomeContainer>
+      <Product>
+        <Image src={shirt1} width={520} height={480} alt="Shirt 1" />
+
+        <footer>
+          <strong>Shirt number 1</strong>
+          <span>$39.90</span>
+        </footer>
+      </Product>
+
+      <Product>
+        <Image src={shirt2} width={520} height={480} alt="Shirt 2" />
+
+        <footer>
+          <strong>Shirt number 2</strong>
+          <span>$39.90</span>
+        </footer>
+      </Product>
+    </HomeContainer>
   );
 }
