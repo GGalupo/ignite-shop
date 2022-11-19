@@ -30,45 +30,23 @@ export default function Home({ products }: HomeProps) {
     },
   });
 
-  console.log(products);
-
   return (
     <HomeContainer ref={sliderRef} className="keen-slider">
-      <Product className="keen-slider__slide">
-        <Image src={shirt1} width={520} height={480} alt="Shirt 1" />
+      {products.map((product) => (
+        <Product key={product.id} className="keen-slider__slide">
+          <Image
+            src={product.imageUrl}
+            width={520}
+            height={480}
+            alt={product.name}
+          />
 
-        <footer>
-          <strong>Shirt number 1</strong>
-          <span>$39.90</span>
-        </footer>
-      </Product>
-
-      <Product className="keen-slider__slide">
-        <Image src={shirt2} width={520} height={480} alt="Shirt 2" />
-
-        <footer>
-          <strong>Shirt number 2</strong>
-          <span>$39.90</span>
-        </footer>
-      </Product>
-
-      <Product className="keen-slider__slide">
-        <Image src={shirt3} width={520} height={480} alt="Shirt 3" />
-
-        <footer>
-          <strong>Shirt number 3</strong>
-          <span>$39.90</span>
-        </footer>
-      </Product>
-
-      <Product className="keen-slider__slide">
-        <Image src={shirt3} width={520} height={480} alt="Shirt 3" />
-
-        <footer>
-          <strong>Shirt number 3</strong>
-          <span>$39.90</span>
-        </footer>
-      </Product>
+          <footer>
+            <strong>{product.name}</strong>
+            <span>{product.price}</span>
+          </footer>
+        </Product>
+      ))}
     </HomeContainer>
   );
 }
