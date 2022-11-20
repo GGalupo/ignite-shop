@@ -1,4 +1,4 @@
-import { type GetServerSideProps } from "next";
+import { type GetStaticProps } from "next";
 import Image from "next/image";
 import type Stripe from "stripe";
 import { useKeenSlider } from "keen-slider/react";
@@ -6,9 +6,6 @@ import "keen-slider/keen-slider.min.css";
 
 import { stripe } from "../lib";
 
-import shirt1 from "../../public/shirts/shirt-1.png";
-import shirt2 from "../../public/shirts/shirt-2.png";
-import shirt3 from "../../public/shirts/shirt-3.png";
 import { HomeContainer, Product } from "../styles/pages/home";
 
 type Product = {
@@ -51,7 +48,7 @@ export default function Home({ products }: HomeProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const response = await stripe.products.list({
     expand: ["data.default_price"],
   });
