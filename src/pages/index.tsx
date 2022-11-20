@@ -12,7 +12,7 @@ type Product = {
   id: string;
   name: string;
   imageUrl: string;
-  price: number;
+  price: string;
 };
 
 interface HomeProps {
@@ -55,12 +55,18 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const products = response.data.map((product) => {
     const price = product.default_price as Stripe.Price;
+    const formattedPrice = price.unit_amount
+      ? new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+        }).format(price.unit_amount / 100)
+      : "$x.xx";
 
     return {
       id: product.id,
       name: product.name,
       imageUrl: product.images[0],
-      price: price.unit_amount,
+      price: formattedPrice,
     };
   });
 
