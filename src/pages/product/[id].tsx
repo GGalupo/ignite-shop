@@ -1,6 +1,9 @@
-import { type NextPage } from "next";
-// import Image from "next/image";
+import { type GetStaticProps, type NextPage } from "next";
+import Image from "next/image";
 import { useRouter } from "next/router";
+import Stripe from "stripe";
+
+import { stripe } from "../../lib";
 
 import {
   ImageContainer,
@@ -8,22 +11,35 @@ import {
   ProductDetails,
 } from "../../styles/pages/product";
 
-const Product: NextPage = () => {
+interface ProductProps {
+  product: {
+    id: string;
+    name: string;
+    imageUrl: string;
+    price: string;
+    description: string;
+  };
+}
+
+const Product: NextPage<ProductProps> = ({ product }) => {
   const { query } = useRouter();
 
   return (
     <ProductContainer>
-      <ImageContainer>{/* <Image /> */}</ImageContainer>
+      <ImageContainer>
+        <Image
+          src={product.imageUrl}
+          alt={product.name}
+          width={520}
+          height={480}
+        />
+      </ImageContainer>
 
       <ProductDetails>
-        <h1>X Shirt</h1>
-        <span>$19.90</span>
+        <h1>{product.name}</h1>
+        <span>{product.price}</span>
 
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut,
-          asperiores. Ad rerum vitae ut nam nulla error saepe voluptatibus nisi
-          quidem earum blanditiis commodi itaque labore officia sit, ex beatae.
-        </p>
+        <p>{product.description}</p>
 
         <button>Buy now</button>
       </ProductDetails>
@@ -32,3 +48,39 @@ const Product: NextPage = () => {
 };
 
 export default Product;
+
+export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
+  params,
+}) => {
+  if (!params) {
+    return {
+      notFound: true,
+    };
+  }
+
+  const productId = params.id;
+  const product = await stripe.products.retrieve(productId, {
+    expand: ["default_price"],
+  });
+
+  const price = product.default_price as Stripe.Price;
+  const formattedPrice = price.unit_amount
+    ? new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(price.unit_amount / 100)
+    : "$x.xx";
+
+  return {
+    props: {
+      product: {
+        id: product.id,
+        name: product.name,
+        imageUrl: product.images[0],
+        price: formattedPrice,
+        description: product.description,
+      },
+    },
+    revalidate: 60 * 60 * 1, // 1h
+  };
+};
