@@ -1,4 +1,4 @@
-import { type GetStaticProps, type NextPage } from "next";
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Stripe from "stripe";
@@ -48,6 +48,17 @@ const Product: NextPage<ProductProps> = ({ product }) => {
 };
 
 export default Product;
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [
+      {
+        params: { id: "prod_MpZ4uTD11aVg8b" },
+      },
+    ],
+    fallback: "blocking",
+  };
+};
 
 export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
   params,
