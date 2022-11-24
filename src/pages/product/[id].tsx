@@ -1,7 +1,8 @@
+import { useState } from "react";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import Stripe from "stripe";
+import axios from "axios";
 
 import { stripe } from "../../lib";
 
@@ -18,11 +19,31 @@ interface ProductProps {
     imageUrl: string;
     price: string;
     description: string;
+    defaultPriceId: string;
   };
 }
 
 const Product: NextPage<ProductProps> = ({ product }) => {
-  const { query } = useRouter();
+  const [isCreatingCheckout, setIsCreatingCheckout] = useState(false);
+
+  const handleBuyProduct = async () => {
+    setIsCreatingCheckout(true);
+
+    try {
+      const response = await axios.post<{ checkoutUrl: string }>(
+        "/api/checkout",
+        {
+          priceId: product.defaultPriceId,
+        }
+      );
+
+      const checkoutUrl = response.data.checkoutUrl;
+      window.location.href = checkoutUrl;
+    } catch (e) {
+      setIsCreatingCheckout(false);
+      console.error(e);
+    }
+  };
 
   return (
     <ProductContainer>
@@ -41,7 +62,9 @@ const Product: NextPage<ProductProps> = ({ product }) => {
 
         <p>{product.description}</p>
 
-        <button>Buy now</button>
+        <button disabled={isCreatingCheckout} onClick={handleBuyProduct}>
+          Buy now
+        </button>
       </ProductDetails>
     </ProductContainer>
   );
@@ -90,6 +113,7 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
         imageUrl: product.images[0],
         price: formattedPrice,
         description: product.description,
+        defaultPriceId: price.id,
       },
     },
     revalidate: 60 * 60 * 1, // 1h
