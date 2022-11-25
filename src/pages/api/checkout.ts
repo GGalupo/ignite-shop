@@ -6,7 +6,13 @@ export default async function checkout(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const priceId = "price_1M5twbDmLeTAh27X4byBY1Hf";
+  if (req.method !== "POST")
+    return res.status(405).json({ error: "Method not allowed." });
+
+  const { priceId } = req.body;
+
+  if (!priceId) return res.status(400).json({ error: "Price not found." });
+
   const successUrl = `${process.env.IGNITE_SHOP_URL}/success`;
   const cancelUrl = `${process.env.IGNITE_SHOP_URL}/`;
 
