@@ -13,7 +13,7 @@ export default async function checkout(
 
   if (!priceId) return res.status(400).json({ error: "Price not found." });
 
-  const successUrl = `${process.env.IGNITE_SHOP_URL}/success`;
+  const successUrl = `${process.env.IGNITE_SHOP_URL}/success?session_id={CHECKOUT_SESSION_ID}`;
   const cancelUrl = `${process.env.IGNITE_SHOP_URL}/`;
 
   const checkoutSession = await stripe.checkout.sessions.create({
