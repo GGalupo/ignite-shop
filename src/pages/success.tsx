@@ -42,6 +42,14 @@ const Success: NextPage<SuccessProps> = ({ customerName, product }) => {
 export default Success;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  if (!query.session_id)
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      },
+    };
+
   const sessionId = String(query.session_id);
   const session = await stripe.checkout.sessions.retrieve(sessionId, {
     expand: ["line_items", "line_items.data.price.product"],
