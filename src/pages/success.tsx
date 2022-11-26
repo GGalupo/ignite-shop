@@ -1,4 +1,5 @@
 import { type GetServerSideProps, type NextPage } from "next";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import Stripe from "stripe";
@@ -17,25 +18,33 @@ interface SuccessProps {
 
 const Success: NextPage<SuccessProps> = ({ customerName, product }) => {
   return (
-    <SuccessContainer>
-      <h1>Successful purchase!</h1>
+    <>
+      <Head>
+        <title>Compra efetuada | Ignite Shop</title>
+        <meta name="robots" content="noindex" />
+      </Head>
 
-      <ImageContainer>
-        <Image
-          src={product.imageUrl}
-          alt={product.name}
-          width={120}
-          height={110}
-        />
-      </ImageContainer>
+      <SuccessContainer>
+        <h1>Successful purchase!</h1>
 
-      <p>
-        Wohoo, <strong>{customerName}</strong>! Your payment for {product.name}{" "}
-        is OK and it&apos;ll be sent to you as soon as possible!
-      </p>
+        <ImageContainer>
+          <Image
+            src={product.imageUrl}
+            alt={product.name}
+            width={120}
+            height={110}
+          />
+        </ImageContainer>
 
-      <Link href="/">Back to products</Link>
-    </SuccessContainer>
+        <p>
+          Wohoo, <strong>{customerName}</strong>! Your payment for{" "}
+          {product.name} is OK and it&apos;ll be sent to you as soon as
+          possible!
+        </p>
+
+        <Link href="/">Back to products</Link>
+      </SuccessContainer>
+    </>
   );
 };
 
