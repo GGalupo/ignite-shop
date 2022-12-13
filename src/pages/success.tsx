@@ -20,7 +20,7 @@ const Success: NextPage<SuccessProps> = ({ customerName, product }) => {
   return (
     <>
       <Head>
-        <title>Compra efetuada | Ignite Shop</title>
+        <title>Successful purchase | Ignite Shop</title>
         <meta name="robots" content="noindex" />
       </Head>
 
